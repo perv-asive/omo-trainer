@@ -54,7 +54,7 @@ class App(object):
         self.permission_button = ttk.Button(self.mainframe, text="May I pee?")
         self.permission_button.grid(column=1, row=1, sticky=(tk.W))
 
-        self.accident_button = ttk.Button(self.mainframe, text="I can't hold it!")
+        self.accident_button = ttk.Button(self.mainframe, text="I can't hold it!", command=self.accident)
         self.accident_button.grid(column=4, row=1, sticky=(tk.E))
 
         for child in self.mainframe.winfo_children():
@@ -67,6 +67,9 @@ class App(object):
 
     def drink(self):
         self.drinker.add_drink(now(), self.drink_amount.get())
+
+    def accident(self):
+        self.drinker.add_release(now(), False)
 
     def poll(self):
         self.desperation.set(self.drinker.desperation(now()))
