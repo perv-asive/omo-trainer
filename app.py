@@ -34,7 +34,7 @@ class App(object):
 
         self.bladder_bar = ttk.Progressbar(self.mainframe, orient=tk.VERTICAL,
                                            variable=self.desperation, maximum=1, mode='determinate')
-        self.bladder_bar.grid(column=0, row=0, sticky=(tk.N, tk.S))
+        self.bladder_bar.grid(column=0, row=0, rowspan=2, sticky=(tk.N, tk.S))
 
         # self.bladder_display = ttk.Label(self.mainframe, textvariable=self.desperation)
         # self.bladder_display.grid(column=0, row=0, sticky=(tk.N, tk.E))
