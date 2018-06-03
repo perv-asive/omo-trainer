@@ -4,13 +4,17 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import appdirs
 
+
 def now():
     return time.time()/60.0
+
 
 class App(object):
     def __init__(self):
         self.root = tk.Tk()
         self.root.title("Omo Trainer")
+        img = tk.Image("photo", file="icon.png")
+        self.root.call('wm', 'iconphoto', self.root._w, img)
 
         self.drinker = omo.Drinker()
 
