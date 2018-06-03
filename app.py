@@ -18,12 +18,13 @@ class App(object):
 
         # Initialize GUI property variables
         self.desperation = tk.DoubleVar()
-        self.poll()
 
         self.drink_amount = tk.IntVar()
         self.drink_amount.set(300)
 
         self.create_widgets()
+
+        self.poll()
 
     def create_widgets(self):
         self.mainframe = ttk.Frame(self.root, padding="3 3 12 12")
@@ -51,8 +52,15 @@ class App(object):
         self.drink_button = ttk.Button(self.mainframe, text="Drink", command=self.drink)
         self.drink_button.grid(column=4, row=0, sticky=(tk.E))
 
-        self.permission_button = ttk.Button(self.mainframe, text="May I pee?")
+        self.permission_text = tk.StringVar()
+        self.permission_text.set("May I pee?")
+        self.permission_button = ttk.Button(self.mainframe, textvariable=self.permission_text,
+                                            command=self.ask_permission)
         self.permission_button.grid(column=1, row=1, sticky=(tk.W))
+
+        self.pee_button = ttk.Button(self.mainframe, text="Go pee.", command=self.pee)
+        self.pee_button.grid(column=2, row=1, sticky=(tk.W))
+        self.pee_button.state(['disabled'])
 
         self.accident_button = ttk.Button(self.mainframe, text="I can't hold it!", command=self.accident)
         self.accident_button.grid(column=4, row=1, sticky=(tk.E))
@@ -60,7 +68,7 @@ class App(object):
         for child in self.mainframe.winfo_children():
             child.grid_configure(padx=5, pady=5)
 
-    def quantize_drink(self, e=None):
+    def quantize_drink(self, *args):
         value = self.drink_slider.get()
         quantized_val = int(round(value/50)*50)
         self.drink_amount.set(quantized_val)
@@ -71,8 +79,26 @@ class App(object):
     def accident(self):
         self.drinker.add_release(now(), False)
 
+    def ask_permission(self):
+        if self.drinker.roll_for_permission(now()):
+            self.permission_text.set("You may pee.")
+            self.permission_button.state(['disabled'])
+            self.pee_button.state(['!disabled'])
+        else:
+            self.permission_text.set("You may not pee.")
+            self.permission_button.state(['disabled'])
+
+    def pee(self):
+        self.drinker.add_release(now(), True)
+        self.pee_button.state(['disabled'])
+
     def poll(self):
-        self.desperation.set(self.drinker.desperation(now()))
+        t = now()
+        self.desperation.set(self.drinker.desperation(t))
+        if self.permission_button.instate(['disabled']) and self.drinker.roll_allowed(t):
+            self.permission_button.state(['!disabled'])
+            self.pee_button.state(['disabled'])
+            self.permission_text.set("May I pee?")
         self.root.after(500, self.poll)
 
     def load_data(self):
