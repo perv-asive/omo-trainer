@@ -15,6 +15,7 @@ default_capacity = 500
 # by fullness_quantum. Should probably be something like 150-300 mL
 fullness_quantum = 150
 
+
 class Permission(collections.namedtuple('Permission', ['time', 'permission'])):
     pass
 
@@ -29,6 +30,7 @@ class Drink(collections.namedtuple('Drink', ['time', 'amount'])):
 
 class Release(collections.namedtuple('Release', ['time', 'amount', 'permission'])):
     pass
+
 
 class Drinker(object):
     def __init__(self):

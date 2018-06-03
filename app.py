@@ -16,11 +16,14 @@ class App(object):
 
         self.load_data()
 
-        self.bladder = tk.DoubleVar()
+        # Initialize GUI property variables
+        self.desperation = tk.DoubleVar()
+        self.poll()
+
+        self.drink_amount = tk.IntVar()
+        self.drink_amount.set(300)
 
         self.create_widgets()
-
-        self.poll()
 
     def create_widgets(self):
         self.mainframe = ttk.Frame(self.root, padding="3 3 12 12")
@@ -29,11 +32,11 @@ class App(object):
         self.mainframe.rowconfigure(0, weight=1)
 
         self.bladder_bar = ttk.Progressbar(self.mainframe, orient=tk.VERTICAL,
-                                           variable=self.bladder, mode='determinate')
+                                           variable=self.desperation, maximum=1, mode='determinate')
         self.bladder_bar.grid(column=0, row=0, rowspan=2, sticky=(tk.N, tk.S))
 
-        self.drink_amount = tk.IntVar()
-        self.drink_amount.set(300)
+        # self.bladder_display = ttk.Label(self.mainframe, textvariable=self.desperation)
+        # self.bladder_display.grid(column=0, row=0, sticky=(tk.N, tk.E))
 
         self.drink_slider = ttk.Scale(self.mainframe, orient=tk.HORIZONTAL, length=200,
                                       variable=self.drink_amount, command=self.quantize_drink, from_=50, to=750)
@@ -45,7 +48,7 @@ class App(object):
         self.drink_units = ttk.Label(self.mainframe, text="mL")
         self.drink_units.grid(column=3, row=0, sticky=(tk.W))
 
-        self.drink_button = ttk.Button(self.mainframe, text="Drink")
+        self.drink_button = ttk.Button(self.mainframe, text="Drink", command=self.drink)
         self.drink_button.grid(column=4, row=0, sticky=(tk.E))
 
         self.permission_button = ttk.Button(self.mainframe, text="May I pee?")
@@ -62,8 +65,11 @@ class App(object):
         quantized_val = int(round(value/50)*50)
         self.drink_amount.set(quantized_val)
 
+    def drink(self):
+        self.drinker.add_drink(now(), self.drink_amount.get())
+
     def poll(self):
-        self.bladder = self.drinker.bladder(now())
+        self.desperation.set(self.drinker.desperation(now()))
         self.root.after(500, self.poll)
 
     def load_data(self):
