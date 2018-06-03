@@ -110,7 +110,7 @@ class App(object):
         self.root.after(500, self.poll)
 
     def load_data(self):
-        pass
+        self.save_dir = appdirs.user_data_dir('Omo Trainer', 'PERVasive')
 
 
 app = App()
