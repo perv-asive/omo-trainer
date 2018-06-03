@@ -73,7 +73,7 @@ class Drinker(object):
         self.history += [Drink(t, amount)]
 
     def add_release(self, t, permission):
-        self.history += [Release(t, self.bladder(t), permission]
+        self.history += [Release(t, self.bladder(t), permission)]
 
     def desperation(self, t):
         # Normalize holding over capacity down to 1.0
