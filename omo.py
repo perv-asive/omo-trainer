@@ -11,22 +11,11 @@ h = float(30)
 # default_capacity is 500 mL, the accepted figure for human bladder size
 # this is known to be low for Omo players, but it is better to err low
 default_capacity = 500
-# maximum allowed absorption rate, in mL/min
-max_rate = 17.5
-# maximum allowed water consumption, in mL/day
-max_drinks = 8000
-# minimum amount required to bother drinking, in mL
-min_drink = 150
-# minimum time between drinks, in minutes
-min_interval = 15
-# assumed average urine flow rate, in mL/s
-flow_rate = 20
-# All drink prompts and inputs will be multiples of this
-drink_quantum = 150
-# Minimum interval between requests to pee, in minutes
-ask_interval = 30
+# after asking permission, we cannot ask again until bladder has increased
+# by fullness_quantum. Should probably be something like 150-300 mL
+fullness_quantum = 150
 
-class Prompt(collections.namedtuple('Prompt', ['time', 'amount'])):
+class Permission(collections.namedtuple('Permission', ['time', 'permission'])):
     pass
 
 
@@ -44,6 +33,7 @@ class Release(collections.namedtuple('Release', ['time', 'amount', 'permission']
 class Drinker(object):
     def __init__(self):
         self._history = []
+        self._permission = Permission(None, False)
 
     @property
     def history(self):
@@ -91,10 +81,19 @@ class Drinker(object):
         fullness = self.bladder(t)/float(self.capacity)
         return 1.0 if fullness > 1.0 else fullness
 
-    def permission(self, t):
-        # 10% chance of guaranteed yes or no
-        roll = random.random()*1.2 - 0.1
-        if roll > self.desperation(t):
+    @property
+    def permission(self):
+        return self._permission.permission
+
+    def roll_allowed(self, t):
+        if not self._permission.time:
             return True
         else:
-            return False
+            return self.bladder(t) - self.bladder(self._permission.time) > fullness_quantum
+
+    def roll_for_permission(self, t):
+        # 10% chance of guaranteed yes or no
+        roll = random.random()*1.2 - 0.1
+        answer = roll > self.desperation(t)
+        self._permission = Permission(t, answer)
+        return answer
