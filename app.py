@@ -34,23 +34,23 @@ class App(object):
 
         self.bladder_bar = ttk.Progressbar(self.mainframe, orient=tk.VERTICAL,
                                            variable=self.desperation, maximum=1, mode='determinate')
-        self.bladder_bar.grid(column=0, row=0, rowspan=2, sticky=(tk.N, tk.S))
+        self.bladder_bar.grid(column=0, row=0, sticky=(tk.N, tk.S))
 
         # self.bladder_display = ttk.Label(self.mainframe, textvariable=self.desperation)
         # self.bladder_display.grid(column=0, row=0, sticky=(tk.N, tk.E))
 
         self.drink_slider = ttk.Scale(self.mainframe, orient=tk.HORIZONTAL, length=200,
                                       variable=self.drink_amount, command=self.quantize_drink, from_=50, to=750)
-        self.drink_slider.grid(column=1, row=0, sticky=(tk.W, tk.E))
+        self.drink_slider.grid(column=1, row=0, columnspan=2, sticky=(tk.W, tk.E))
 
         self.drink_display = ttk.Label(self.mainframe, textvariable=self.drink_amount)
-        self.drink_display.grid(column=2, row=0, sticky=(tk.E))
+        self.drink_display.grid(column=3, row=0, sticky=(tk.E))
 
         self.drink_units = ttk.Label(self.mainframe, text="mL")
-        self.drink_units.grid(column=3, row=0, sticky=(tk.W))
+        self.drink_units.grid(column=4, row=0, sticky=(tk.W))
 
         self.drink_button = ttk.Button(self.mainframe, text="Drink", command=self.drink)
-        self.drink_button.grid(column=4, row=0, sticky=(tk.E))
+        self.drink_button.grid(column=5, row=0, sticky=(tk.E))
 
         self.permission_text = tk.StringVar()
         self.permission_text.set("May I pee?")
@@ -63,7 +63,7 @@ class App(object):
         self.pee_button.state(['disabled'])
 
         self.accident_button = ttk.Button(self.mainframe, text="I can't hold it!", command=self.accident)
-        self.accident_button.grid(column=4, row=1, sticky=(tk.E))
+        self.accident_button.grid(column=5, row=1, sticky=(tk.E))
 
         for child in self.mainframe.winfo_children():
             child.grid_configure(padx=5, pady=5)
