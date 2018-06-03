@@ -22,6 +22,10 @@ class App(object):
         self.drink_amount = tk.IntVar()
         self.drink_amount.set(300)
 
+        self.bladder_text = tk.StringVar()
+        self.drink_text = tk.StringVar()
+        self.permission_text = tk.StringVar()
+
         self.create_widgets()
 
         self.poll()
@@ -36,23 +40,20 @@ class App(object):
                                            variable=self.desperation, maximum=1, mode='determinate')
         self.bladder_bar.grid(column=0, row=0, rowspan=2, sticky=(tk.N, tk.S))
 
-        # self.bladder_display = ttk.Label(self.mainframe, textvariable=self.desperation)
-        # self.bladder_display.grid(column=0, row=0, sticky=(tk.N, tk.E))
+        self.bladder_display = ttk.Label(self.mainframe, textvariable=self.bladder_text)
+        self.bladder_display.grid(column=0, row=2, sticky=(tk.S, tk.W))
 
         self.drink_slider = ttk.Scale(self.mainframe, orient=tk.HORIZONTAL, length=200,
-                                      variable=self.drink_amount, command=self.quantize_drink, from_=50, to=750)
+                                      variable=self.drink_amount, command=self.quantize_drink, from_=100, to=750)
         self.drink_slider.grid(column=1, row=0, columnspan=2, sticky=(tk.W, tk.E))
 
-        self.drink_display = ttk.Label(self.mainframe, textvariable=self.drink_amount)
+        self.drink_display = ttk.Label(self.mainframe, textvariable=self.drink_text)
         self.drink_display.grid(column=3, row=0, sticky=(tk.E))
-
-        self.drink_units = ttk.Label(self.mainframe, text="mL")
-        self.drink_units.grid(column=4, row=0, sticky=(tk.W))
+        self.quantize_drink()
 
         self.drink_button = ttk.Button(self.mainframe, text="Drink", command=self.drink)
-        self.drink_button.grid(column=5, row=0, sticky=(tk.E))
+        self.drink_button.grid(column=4, row=0, sticky=(tk.E))
 
-        self.permission_text = tk.StringVar()
         self.permission_text.set("May I pee?")
         self.permission_button = ttk.Button(self.mainframe, textvariable=self.permission_text,
                                             command=self.ask_permission)
@@ -63,7 +64,7 @@ class App(object):
         self.pee_button.state(['disabled'])
 
         self.accident_button = ttk.Button(self.mainframe, text="I can't hold it!", command=self.accident)
-        self.accident_button.grid(column=5, row=1, sticky=(tk.E))
+        self.accident_button.grid(column=4, row=1, sticky=(tk.E))
 
         for child in self.mainframe.winfo_children():
             child.grid_configure(padx=5, pady=5)
@@ -72,6 +73,7 @@ class App(object):
         value = self.drink_slider.get()
         quantized_val = int(round(value/50)*50)
         self.drink_amount.set(quantized_val)
+        self.drink_text.set(str(quantized_val) + " mL")
 
     def drink(self):
         self.drinker.add_drink(now(), self.drink_amount.get())
@@ -90,11 +92,13 @@ class App(object):
 
     def pee(self):
         self.drinker.add_release(now(), True)
+        self.permission_text.set("May I pee?")
         self.pee_button.state(['disabled'])
 
     def poll(self):
         t = now()
         self.desperation.set(self.drinker.desperation(t))
+        self.bladder_text.set(str(round(self.drinker.bladder(t))) + " mL/" + str(round(self.drinker.capacity)) + " mL")
         if self.permission_button.instate(['disabled']) and self.drinker.roll_allowed(t):
             self.permission_button.state(['!disabled'])
             self.pee_button.state(['disabled'])
