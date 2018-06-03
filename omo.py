@@ -60,7 +60,8 @@ class Drinker(object):
     @property
     def capacity(self):
         if self.accidents:
-            return statistics.mean(el.amount for el in self.accidents)
+            new_cap = statistics.mean(el.amount for el in self.accidents)
+            return new_cap if new_cap else default_capacity
         else:
             return default_capacity
 
