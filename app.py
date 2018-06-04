@@ -3,6 +3,11 @@ import time
 import tkinter as tk
 import tkinter.ttk as ttk
 import appdirs
+import csv
+import os
+
+save_dir = appdirs.user_data_dir('Omo Trainer', 'PERVasive')
+accident_log = os.path.join(save_dir, 'accidents.csv')
 
 
 def now():
@@ -110,9 +115,20 @@ class App(object):
         self.root.after(500, self.poll)
 
     def load_data(self):
-        self.save_dir = appdirs.user_data_dir('Omo Trainer', 'PERVasive')
+        if os.path.exists(accident_log):
+            with open(accident_log, 'r', newline='') as f:
+                reader = csv.reader(f)
+                self.drinker.old_accidents = [float(row[0]) for row in reader]
+                print(self.drinker.old_accidents)
+
+    def save_data(self):
+        os.makedirs(os.path.dirname(accident_log), exist_ok=True)
+        with open(accident_log, 'a', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerows([accident.amount] for accident in self.drinker.accidents)
 
 
 app = App()
 app.root.mainloop()
+app.save_data()
 

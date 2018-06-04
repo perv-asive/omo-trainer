@@ -35,6 +35,7 @@ class Release(collections.namedtuple('Release', ['time', 'amount', 'permission']
 class Drinker(object):
     def __init__(self):
         self._history = []
+        self.old_accidents = []
         self._permission = Permission(None, False)
 
     @property
@@ -59,8 +60,9 @@ class Drinker(object):
 
     @property
     def capacity(self):
-        if self.accidents:
-            new_cap = statistics.mean(el.amount for el in self.accidents)
+        all_accidents = [el.amount for el in self.accidents] + self.old_accidents
+        if all_accidents:
+            new_cap = statistics.mean(all_accidents)
             return new_cap if new_cap else default_capacity
         else:
             return default_capacity
