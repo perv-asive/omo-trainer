@@ -140,7 +140,8 @@ class App(object):
             os.remove(accident_log)
 
 
-app = App()
-app.root.mainloop()
-app.save_data()
+if __name__ == "__main__":
+    app = App()
+    app.root.mainloop()
+    app.save_data()
 

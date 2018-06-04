@@ -4,8 +4,6 @@ import collections
 import statistics
 import random
 
-random.seed()
-
 # h is the half life of water consumed before it gets absorbed, in minutes
 h = float(30)
 # default_capacity is 500 mL, the accepted figure for human bladder size
@@ -34,6 +32,7 @@ class Release(collections.namedtuple('Release', ['time', 'amount', 'permission']
 
 class Drinker(object):
     def __init__(self):
+        random.seed()
         self._history = []
         self.old_accidents = []
         self._permission = Permission(None, False)
@@ -85,10 +84,6 @@ class Drinker(object):
         # So that permission is always possible
         fullness = self.bladder(t)/float(self.capacity)
         return 1.0 if fullness > 1.0 else fullness
-
-    @property
-    def permission(self):
-        return self._permission.permission
 
     def roll_allowed(self, t):
         if not self._permission.time:
