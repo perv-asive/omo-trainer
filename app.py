@@ -36,6 +36,7 @@ class App(object):
         self.permission_text = tk.StringVar()
 
         self.create_widgets()
+        self.create_menus()
 
         self.poll()
 
@@ -78,6 +79,13 @@ class App(object):
         for child in self.mainframe.winfo_children():
             child.grid_configure(padx=5, pady=5)
 
+    def create_menus(self):
+        self.menubar = tk.Menu(self.root, tearoff=0)
+        self.menu_main = tk.Menu(self.menubar, tearoff=0)
+        self.root.config(menu=self.menubar)
+        self.menubar.add_cascade(menu=self.menu_main, label='Menu')
+        self.menu_main.add_command(label='Reset Capacity Log', command=self.reset_capacity)
+
     def quantize_drink(self, *args):
         value = self.drink_slider.get()
         quantized_val = int(round(value/50)*50)
@@ -119,13 +127,17 @@ class App(object):
             with open(accident_log, 'r', newline='') as f:
                 reader = csv.reader(f)
                 self.drinker.old_accidents = [float(row[0]) for row in reader]
-                print(self.drinker.old_accidents)
 
     def save_data(self):
         os.makedirs(os.path.dirname(accident_log), exist_ok=True)
         with open(accident_log, 'a', newline='') as f:
             writer = csv.writer(f)
             writer.writerows([accident.amount] for accident in self.drinker.accidents)
+
+    @staticmethod
+    def reset_capacity():
+        if os.path.exists(accident_log):
+            os.remove(accident_log)
 
 
 app = App()
