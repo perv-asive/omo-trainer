@@ -34,6 +34,7 @@ class App(object):
         self.bladder_text = tk.StringVar()
         self.drink_text = tk.StringVar()
         self.permission_text = tk.StringVar()
+        self.eta_text = tk.StringVar()
 
         self.create_widgets()
         self.create_menus()
@@ -52,6 +53,9 @@ class App(object):
 
         self.bladder_display = ttk.Label(self.mainframe, textvariable=self.bladder_text)
         self.bladder_display.grid(column=0, row=2, sticky=(tk.S, tk.W))
+
+        self.eta_display = ttk.Label(self.mainframe, textvariable=self.eta_text)
+        self.eta_display.grid(column=1, row=2, columnspan=2, sticky=(tk.S, tk.W))
 
         self.drink_slider = ttk.Scale(self.mainframe, orient=tk.HORIZONTAL, length=200,
                                       variable=self.drink_amount, command=self.quantize_drink, from_=100, to=750)
@@ -116,6 +120,8 @@ class App(object):
         t = now()
         self.desperation.set(self.drinker.desperation(t))
         self.bladder_text.set(str(round(self.drinker.bladder(t))) + " mL/" + str(round(self.drinker.capacity)) + " mL")
+        self.eta_text.set("Potty emergency in: " + str(round(self.drinker.eta - now())) + " minutes"
+                          if self.drinker.eta else "")
         if self.permission_button.instate(['disabled']) and self.drinker.roll_allowed(t):
             self.permission_button.state(['!disabled'])
             self.pee_button.state(['disabled'])

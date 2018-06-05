@@ -3,6 +3,7 @@ __author__ = 'PERVasive'
 import collections
 import statistics
 import random
+from math import log2
 
 # h is the half life of water consumed before it gets absorbed, in minutes
 h = float(30)
@@ -65,6 +66,17 @@ class Drinker(object):
             return new_cap if new_cap else default_capacity
         else:
             return default_capacity
+
+    @property
+    def eta(self):
+        excess_latent_water = sum(el.amount for el in self.history) - self.capacity
+        if excess_latent_water > 0:
+            start_time = min(el.time for el in self.drinks)
+            # Inverse function of sum(unabsorbed), must be solved by hand algebraically
+            return start_time + \
+                   h*log2(sum(el.amount*2**((el.time - start_time)/h) for el in self.drinks)/excess_latent_water)
+        else:
+            return None
 
     def absorbed(self, t):
         return sum(el.amount - el.unabsorbed(t) for el in self.drinks)
