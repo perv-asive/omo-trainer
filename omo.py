@@ -74,7 +74,7 @@ class Drinker(object):
             start_time = min(el.time for el in self.drinks)
             # Inverse function of sum(unabsorbed), must be solved by hand algebraically
             return start_time + \
-                   h*log2(sum(el.amount*2**((el.time - start_time)/h) for el in self.drinks)/excess_latent_water)
+                h*log2(sum(el.amount*2**((el.time - start_time)/h) for el in self.drinks)/excess_latent_water)
         else:
             return None
 

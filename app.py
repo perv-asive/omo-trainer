@@ -5,6 +5,7 @@ import tkinter.ttk as ttk
 import appdirs
 import csv
 import os
+import math
 
 save_dir = appdirs.user_data_dir('Omo Trainer', 'PERVasive')
 accident_log = os.path.join(save_dir, 'accidents.csv')
@@ -120,8 +121,20 @@ class App(object):
         t = now()
         self.desperation.set(self.drinker.desperation(t))
         self.bladder_text.set(str(round(self.drinker.bladder(t))) + " mL/" + str(round(self.drinker.capacity)) + " mL")
-        self.eta_text.set("Potty emergency in: " + str(round(self.drinker.eta - now())) + " minutes"
-                          if self.drinker.eta else "")
+        if self.drinker.eta:
+            eta = math.ceil(self.drinker.eta - now())
+            if eta > 1:
+                self.eta_text.set("Potty emergency in: " + str(eta) + " minutes")
+            elif eta == 1:
+                self.eta_text.set("Potty emergency in: " + str(eta) + " minute")
+            elif eta == 0:
+                self.eta_text.set("Potty emergency now!")
+            elif eta == -1:
+                self.eta_text.set("Potty emergency for " + str(abs(eta)) + " minute and counting!")
+            else:
+                self.eta_text.set("Potty emergency for " + str(abs(eta)) + " minutes and counting!" )
+        else:
+            self.eta_text.set("")
         if self.permission_button.instate(['disabled']) and self.drinker.roll_allowed(t):
             self.permission_button.state(['!disabled'])
             self.pee_button.state(['disabled'])
