@@ -19,8 +19,12 @@ class App(object):
     def __init__(self):
         self.root = tk.Tk()
         self.root.title("Omo Trainer")
-        img = tk.Image("photo", file="icon.png")
-        self.root.call('wm', 'iconphoto', self.root._w, img)
+        try:
+            img = tk.Image("photo", file="icon.png")
+            self.root.call('wm', 'iconphoto', self.root._w, img)
+        except tk.TclError:
+            # If the icon is missing, just go on with the default icon
+            pass
 
         self.drinker = omo.Drinker()
 

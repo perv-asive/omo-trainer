@@ -35,7 +35,7 @@ You might notice that after asking permission, you can't ask again for some time
 
 Whenever you press "I can't hold it!" Omo Trainer records the amount it estimates you were holding and saves it between sessions. Omo Trainer uses the average of your accident amounts as your bladder capacity.
 
-Since the only way that Omo Trainer learns about your bladder capacity is when you have an accident, it is self-correcting for Omo Trainer to underestimate your bladder capacity. After all, then you will get permission to pee less, and will have more accidents, so Omo Trainer will learn. If Omo Trainer overestimates your capacity, however, you will get permission to pee more, and will have fewer accidents, preventing Omo Trainer from learning.  This is why Omo Trainer begins be assuming a small bladder capacity of 500 mL.
+Since the only way that Omo Trainer learns about your bladder capacity is when you have an accident, it is self-correcting for Omo Trainer to underestimate your bladder capacity. After all, then you will get permission to pee less, and will have more accidents, so Omo Trainer will learn. If Omo Trainer overestimates your capacity, however, you will get permission to pee more, and will have fewer accidents, preventing Omo Trainer from learning.  This is why Omo Trainer begins by assuming a small bladder capacity of 500 mL.
 
 If you are dehydrated to begin with, a significant percentage of fluids will not reach your bladder, leading Omo Trainer to significantly overestimate your desperation and bladder capacity. Therefore hydrate well before playing.
 
