@@ -134,12 +134,8 @@ class App(object):
                 self.eta_text.set("Potty emergency in: " + str(eta) + " minutes")
             elif eta == 1:
                 self.eta_text.set("Potty emergency in: " + str(eta) + " minute")
-            elif eta == 0:
-                self.eta_text.set("Potty emergency now!")
-            elif eta == -1:
-                self.eta_text.set("Potty emergency for " + str(abs(eta)) + " minute and counting!")
             else:
-                self.eta_text.set("Potty emergency for " + str(abs(eta)) + " minutes and counting!" )
+                self.eta_text.set("Potty emergency now!")
         else:
             self.eta_text.set("")
         if self.permission_button.instate(['disabled']) and self.drinker.roll_allowed(t):

@@ -6,13 +6,13 @@ import random
 from math import log2
 
 # h is the half life of water consumed before it gets absorbed, in minutes
-h = float(30)
+h = float(45)
 # default_capacity is 500 mL, the accepted figure for human bladder size
 # this is known to be low for Omo players, but it is better to err low
 default_capacity = 500
 # after asking permission, we cannot ask again until bladder has increased
-# by fullness_quantum. Should probably be something like 150-300 mL
-fullness_quantum = 150
+# by capacity/fullness_quantum. This method is balanced between large and small bladders.
+fullness_quantum = 5.0
 
 
 class Permission(collections.namedtuple('Permission', ['time', 'permission'])):
@@ -73,6 +73,7 @@ class Drinker(object):
         if excess_latent_water > 0:
             start_time = min(el.time for el in self.drinks)
             # Inverse function of sum(unabsorbed), must be solved by hand algebraically
+            # Result will change if additional drinks after ETA is reached
             return start_time + \
                 h*log2(sum(el.amount*2**((el.time - start_time)/h) for el in self.drinks)/excess_latent_water)
         else:
@@ -101,7 +102,7 @@ class Drinker(object):
         if not self._permission.time:
             return True
         else:
-            return self.bladder(t) - self.bladder(self._permission.time) > fullness_quantum
+            return self.bladder(t) - self.bladder(self._permission.time) > self.capacity/fullness_quantum
 
     def roll_for_permission(self, t):
         # 10% chance of guaranteed yes or no
