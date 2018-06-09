@@ -59,12 +59,12 @@ class App(object):
         self.eta_display.grid(column=1, row=2, columnspan=2, sticky=(tk.S, tk.W))
 
         self.drink_slider = ttk.Scale(self.mainframe, orient=tk.HORIZONTAL, length=200,
-                                      variable=self.drink_amount, command=self.quantize_drink, from_=100, to=750)
+                                      variable=self.drink_amount, command=self._quantize_drink, from_=100, to=750)
         self.drink_slider.grid(column=1, row=0, columnspan=2, sticky=(tk.W, tk.E))
 
         self.drink_display = ttk.Label(self.mainframe, textvariable=self.drink_text)
         self.drink_display.grid(column=3, row=0, sticky=(tk.E))
-        self.quantize_drink()
+        self._quantize_drink()
 
         self.drink_button = ttk.Button(self.mainframe, text="Drink", command=self.drink)
         self.drink_button.grid(column=4, row=0, sticky=(tk.E))
@@ -91,17 +91,24 @@ class App(object):
         self.menubar.add_cascade(menu=self.menu_main, label='Menu')
         self.menu_main.add_command(label='Reset Capacity Log', command=self.reset_capacity)
 
-    def quantize_drink(self, *args):
+    def _quantize_drink(self, *args):
         value = self.drink_slider.get()
         quantized_val = int(round(value/50)*50)
         self.drink_amount.set(quantized_val)
         self.drink_text.set(str(quantized_val) + " mL")
 
+    def _on_click(self, butt):
+        """Briefly disables a button to avoid accidental double clicking"""
+        butt.state(['disabled'])
+        self.root.after(1000, lambda: butt.state(['!disabled']))
+
     def drink(self):
         self.drinker.add_drink(now(), self.drink_amount.get())
+        self._on_click(self.drink_button)
 
     def accident(self):
         self.drinker.add_release(now(), False)
+        self._on_click(self.accident_button)
 
     def ask_permission(self):
         if self.drinker.roll_for_permission(now()):
@@ -153,10 +160,10 @@ class App(object):
             writer = csv.writer(f)
             writer.writerows([accident.amount] for accident in self.drinker.accidents)
 
-    @staticmethod
-    def reset_capacity():
+    def reset_capacity(self):
         if os.path.exists(accident_log):
             os.remove(accident_log)
+        self.drinker.old_accidents = []
 
 
 if __name__ == "__main__":
