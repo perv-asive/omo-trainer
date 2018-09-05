@@ -1,0 +1,5 @@
+To build .exe, activate the venv, then:
+
+pyinstaller --clean -F -w app.py
+
+Use the option --icon icon.ico for the app icon if desired, but not sure if it works yet.
