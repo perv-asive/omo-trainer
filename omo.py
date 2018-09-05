@@ -102,7 +102,7 @@ class Drinker(object):
         if not self._permission.time:
             return True
         else:
-            return self.bladder(t) - self.bladder(self._permission.time) > self.capacity/fullness_quantum
+            return self.absorbed(t) - self.absorbed(self._permission.time) > self.capacity/fullness_quantum
 
     def roll_for_permission(self, t):
         # 10% chance of guaranteed yes or no
