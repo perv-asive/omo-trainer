@@ -69,7 +69,8 @@ class Drinker(object):
 
     @property
     def eta(self):
-        excess_latent_water = sum(el.amount for el in self.history) - self.capacity
+        excess_latent_water = \
+            sum(el.amount for el in self.drinks) - sum(el.amount for el in self.releases) - self.capacity
         if excess_latent_water > 0:
             start_time = min(el.time for el in self.drinks)
             # Inverse function of sum(unabsorbed), must be solved by hand algebraically
