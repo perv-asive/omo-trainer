@@ -133,7 +133,7 @@ class App(object):
         self.desperation.set(self.drinker.desperation(t))
         self.bladder_text.set(str(round(self.drinker.bladder(t))) + " mL/" + str(round(self.drinker.capacity)) + " mL")
         if self.drinker.eta:
-            eta = math.ceil(self.drinker.eta - now())
+            eta = math.ceil(self.drinker.eta - t)
             if eta > 1:
                 self.eta_text.set("Potty emergency in: " + str(eta) + " minutes")
             elif eta == 1:
